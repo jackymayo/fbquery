@@ -1,8 +1,7 @@
 const Main = (props) => {
     return(
-			<div>
+			<div className="container">
 			 	<SearchBar/>
-				<h1> Placeholder </h1>
 			</div>
     );
 

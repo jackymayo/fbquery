@@ -1,20 +1,20 @@
 class SearchBar extends React.Component{
-	constructor(){
-		super();
+	constructor(props){
+		super(props);
 		this.state = {
-			value: '',
-			notLoading: false
+			query: '',
+			notLoading: true,
+			messages: null
 		}
 	}
 
-	// Set the state of the form and console log
-	updateInputValue(event){
-		console.log(event.target.value);
-		this.setState({
-			value : event.target.value,
-		});
+	epochConverter(epochSeconds) {
+		let d = new Date(0);
+		d.setUTCSeconds(epochSeconds)
+		return d;
 	}
 	
+
 	loadFileContent(file){
 		const fileReader = new FileReader();
 		this.loadingStatusToggle()
@@ -24,17 +24,37 @@ class SearchBar extends React.Component{
 			fileReader.readAsText(file);
 		});
 	}
+
+	updateSearchResults(event){
+		let filteredMessages = this.state.messages &&
+			this.state.messages.filter((x)=> {x.content.includes(this.state.query)});
+	
+		this.setState({
+			query : event.target.value,
+			messages: filteredMessages
+		})
+	}
+
 	updateFile(fileList){
 		this.loadFileContent(fileList[0]).then(
 			(value) => {
 				this.loadingStatusToggle();
-				console.log(value);
+				let data  = JSON.parse(value);
+				let participants = data['participants'];
+				let messages = data['messages'].slice(0,50);
+				this.setState({
+					messages: messages
+				})
+				console.log(messages);
 			}
 		);
 	}
 	
 	loadingStatusToggle(){
-		this.state.notLoading = (this.state.notLoading) ? false : true
+		this.setState({
+			notLoading: !this.state.notLoading
+			}
+		)
 	}
 
 	renderLoadingBar(){
@@ -44,13 +64,18 @@ class SearchBar extends React.Component{
 			/>
 		)
 	}
+	renderSearchResults(){
+		return (
+			<Results
+				messages={this.state.messages}
+			/>
+		)
+	}
 	render () {
 		return (
-			 <div className="row">
-		    <div className="col s12">
+			 <div >
+		    <form className="col s12">
 
-					<div className="row"> {this.renderLoadingBar()}
-					</div>
 		      <div className="row">
 		        <div className="input-field col s12">
 		          <i className="material-icons prefix">textsms</i>
@@ -58,16 +83,22 @@ class SearchBar extends React.Component{
 		          <input
 									type="text"
 									id="autocomplete-input" 
-									value={this.state.value}
-									className="autocomplete" onChange={event => this.updateInputValue(event)}/>
+									query={this.state.query}
+									className="autocomplete" onChange={event => this.updateSearchResults(event)}/>
 							<input 
 								type="file"
 								onChange={ event => this.updateFile(event.target.files)}
 							/>
 		        </div>
+						
 		      </div>
-		    </div>
+		    </form>
+				<div className="row">
+					{this.renderLoadingBar()}	
+				</div>
+					{this.renderSearchResults()}
 			</div>
+
 		);
 	}
 }
