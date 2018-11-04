@@ -4,7 +4,8 @@ class SearchBar extends React.Component{
 		this.state = {
 			query: '',
 			notLoading: true,
-			messages: null
+			messages: null,
+			results: null
 		}
 	}
 
@@ -26,12 +27,12 @@ class SearchBar extends React.Component{
 	}
 
 	updateSearchResults(event){
+		let query = event.target.value;
 		let filteredMessages = this.state.messages &&
-			this.state.messages.filter((x)=> {x.content.includes(this.state.query)});
-	
+			this.state.messages.filter(x => x.content.includes(query));
 		this.setState({
 			query : event.target.value,
-			messages: filteredMessages
+			results: filteredMessages
 		})
 	}
 
@@ -67,7 +68,7 @@ class SearchBar extends React.Component{
 	renderSearchResults(){
 		return (
 			<Results
-				messages={this.state.messages}
+				results={this.state.results}
 			/>
 		)
 	}

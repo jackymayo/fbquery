@@ -6,7 +6,7 @@ class Results extends React.Component {
 	render() {
 			return (
 			<ul className="collection">
-				{ this.props.messages && this.props.messages.map((x,i)=>{
+				{ this.props.results && this.props.results.map((x,i)=>{
 					return (
 						<li key={i} className="collection-item">
 							<span title="title"> {x.content} </span> 
