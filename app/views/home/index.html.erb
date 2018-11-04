@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fbfzf</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+		<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+		<%= stylesheet_link_tag 'custom' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+		  <nav>
+    <div class="nav-wrapper">
+      <a href="#" style="left: 20px; position: relative;" class="brand-logo">fbfzf</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+      </ul>
+    </div>
+  </nav>
+		<div class="container">
+    <%= react_component 'Main' %>
+		<%= yield %>
+		</div>
+  </body>
+</html>

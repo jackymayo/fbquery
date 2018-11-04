@@ -3,8 +3,12 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.3.1'
 
+
 # Materialize for framework
 gem 'materialize-sass'
+
+# Get Material icon with the icons
+gem 'material_icons'
 # React JS
 gem 'react-rails'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
