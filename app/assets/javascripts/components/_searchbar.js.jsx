@@ -14,7 +14,6 @@ class SearchBar extends React.Component{
 		d.setUTCSeconds(epochSeconds)
 		return d;
 	}
-	
 
 	loadFileContent(file){
 		const fileReader = new FileReader();
@@ -29,7 +28,7 @@ class SearchBar extends React.Component{
 	updateSearchResults(event){
 		let query = event.target.value;
 		let filteredMessages = this.state.messages &&
-			this.state.messages.filter(x => x.content.includes(query));
+			this.state.messages.filter(x => x.content.toLowerCase().includes(query.toLowerCase()));
 		this.setState({
 			query : event.target.value,
 			results: filteredMessages
@@ -39,7 +38,7 @@ class SearchBar extends React.Component{
 	updateFile(fileList){
 		this.loadFileContent(fileList[0]).then(
 			(value) => {
-				this.loadingStatusToggle();
+				//this.loadingStatusToggle();
 				let data  = JSON.parse(value);
 				let participants = data['participants'];
 				let messages = data['messages'].slice(0,50);
@@ -68,24 +67,27 @@ class SearchBar extends React.Component{
 	renderSearchResults(){
 		return (
 			<Results
+				query={this.state.query}
 				results={this.state.results}
 			/>
 		)
 	}
 	render () {
 		return (
-			 <div >
+			<div className="container">
 		    <form className="col s12">
 
 		      <div className="row">
 		        <div className="input-field col s12">
-		          <i className="material-icons prefix">textsms</i>
+							{this.renderLoadingBar()}	
 							
 		          <input
 									type="text"
 									id="autocomplete-input" 
 									query={this.state.query}
-									className="autocomplete" onChange={event => this.updateSearchResults(event)}/>
+									className="autocomplete"
+									onChange={event => this.updateSearchResults(event)}
+							/>
 							<input 
 								type="file"
 								onChange={ event => this.updateFile(event.target.files)}
@@ -94,9 +96,6 @@ class SearchBar extends React.Component{
 						
 		      </div>
 		    </form>
-				<div className="row">
-					{this.renderLoadingBar()}	
-				</div>
 					{this.renderSearchResults()}
 			</div>
 
