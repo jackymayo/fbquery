@@ -5,14 +5,9 @@ class SearchBar extends React.Component{
 			query: '',
 			notLoading: true,
 			messages: null,
-			results: null
+			results: null,
+			fileName: '',
 		}
-	}
-
-	epochConverter(epochSeconds) {
-		let d = new Date(0);
-		d.setUTCSeconds(epochSeconds)
-		return d;
 	}
 
 	loadFileContent(file){
@@ -26,26 +21,33 @@ class SearchBar extends React.Component{
 	}
 
 	updateSearchResults(event){
+		if (!this.state.messages){
+			// Add notification to be 
+			this.setState({query: ''})
+			return
+		}
+		this.loadingStatusToggle();
 		let query = event.target.value;
 		let filteredMessages = this.state.messages &&
 			this.state.messages.filter(x => x.content.toLowerCase().includes(query.toLowerCase()));
+		
 		this.setState({
 			query : event.target.value,
 			results: filteredMessages
-		})
+		}, () => this.loadingStatusToggle())
 	}
 
 	updateFile(fileList){
 		this.loadFileContent(fileList[0]).then(
 			(value) => {
-				//this.loadingStatusToggle();
+				this.loadingStatusToggle();
 				let data  = JSON.parse(value);
 				let participants = data['participants'];
-				let messages = data['messages'].slice(0,50);
+				let messages = data['messages'];
 				this.setState({
-					messages: messages
+					messages: messages,
+					fileName: fileList[0].name
 				})
-				console.log(messages);
 			}
 		);
 	}
@@ -69,33 +71,45 @@ class SearchBar extends React.Component{
 			<Results
 				query={this.state.query}
 				results={this.state.results}
+				dataLoaded={this.state.messages != null}
 			/>
 		)
 	}
 	render () {
 		return (
 			<div className="container">
-		    <form className="col s12">
-
+		    <form >
+						<div className="row">
+							<div className="file-field input-field">
+								<div className="btn">
+									<span>Browse</span>
+									<input 
+										type="file"
+										onChange={ event => this.updateFile(event.target.files)}
+									/>
+								</div>
+								<div className="file-path-wrapper">
+									<input  className="no_border file-path validate" value={this.state.fileName} placeholder="Choose a JSON file..." type="text"/>
+								</div>
+							</div>
+						</div>
 		      <div className="row">
 		        <div className="input-field col s12">
-							{this.renderLoadingBar()}	
 							
 		          <input
 									type="text"
 									id="autocomplete-input" 
-									query={this.state.query}
+									value={this.state.query}
+									placeholder="Enter your search here..."
 									className="autocomplete"
 									onChange={event => this.updateSearchResults(event)}
 							/>
-							<input 
-								type="file"
-								onChange={ event => this.updateFile(event.target.files)}
-							/>
 		        </div>
-						
 		      </div>
 		    </form>
+						<div className="center">
+						{this.renderLoadingBar()}	
+						</div>
 					{this.renderSearchResults()}
 			</div>
 
