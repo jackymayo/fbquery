@@ -1,3 +1,9 @@
-.hidden {
-		visibility: hidden;
+input.no_border {
+	/* quick and dirty important fix*/
+	box-shadow: none !important;
+	border-bottom: none !important;
+}
+
+.center{
+	margin: 0 auto;
 }

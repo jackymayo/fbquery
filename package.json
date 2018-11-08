@@ -1,5 +1,7 @@
 {
   "name": "fbfzf",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "tern": "^0.22.3"
+  }
 }
