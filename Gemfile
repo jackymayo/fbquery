@@ -3,7 +3,8 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.3.1'
 
-
+# Get rid of Github alert
+gem "rack", ">= 2.0.6"
 # Materialize for framework
 gem 'materialize-sass'
 
